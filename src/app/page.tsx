@@ -1,29 +1,92 @@
 "use client";
 import { memo, useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { data } from "./stones.json";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+import stonesData from "./stones.json";
 import Cylinder from "./Cylinder";
 import Square from "./Square";
 
 function Areas(props: any) {
-  const [coordinate, setCoordinate] = useState([0, 0, 0.65]);
   const [selected, setSelected] = useState({
     id: null,
     color: "",
     type: "",
-    coordinate: [0, 0, 0.65],
+    coordinate: [null, null, 1],
   });
   const [step, setStep] = useState("white");
-  const [stones, setStones] = useState(data);
+  const [stones, setStones] = useState(stonesData.data);
   const [whiteAttributes, setWhiteAttributes] = useState({
-    movedPiyon: [],
+    movedPawn: [],
     rog: false,
   });
   const [blackAttributes, setBlackAttributes] = useState({
-    movedPiyon: [],
+    movedPawn: [],
     rog: false,
   });
+
+  const all: any = useGLTF("models/chess_set.glb");
+  const rook: any = useGLTF("models/rook.glb");
+
+  const models = {
+    white: {
+      pawn: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_4.geometry,
+      },
+      bishop: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_21.geometry,
+      },
+      knight: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_81.geometry,
+      },
+      rook: {
+        material: all.materials["Chess_White"],
+        geometry: rook.nodes.Tower_Material011_0.geometry,
+      },
+      queen: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_15.geometry,
+      },
+      king: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_17.geometry,
+      },
+    },
+    black: {
+      pawn: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_4.geometry,
+      },
+      bishop: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_21.geometry,
+      },
+      knight: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_81.geometry,
+      },
+      rook: {
+        material: all.materials["Material.007"],
+        geometry: rook.nodes.Tower_Material011_0.geometry,
+      },
+      queen: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_15.geometry,
+      },
+      king: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_17.geometry,
+      },
+    },
+
+    all: {
+      material: all.materials["Chess_White"],
+      geometry: all.nodes.Object_83.geometry,
+    },
+  };
+
   return (
     <>
       {Array(64)
@@ -56,7 +119,12 @@ function Areas(props: any) {
             />
           );
         })}
-
+      {/* <mesh
+        material={models.all.material}
+        geometry={models.all.geometry}
+        scale={1}
+        position={[0, 0, 1]}
+      /> */}
       {stones.map((stone: any, index: number) => {
         return (
           <Cylinder
@@ -65,6 +133,8 @@ function Areas(props: any) {
             position={stone.position}
             color={stone.color}
             type={stone.type}
+            model={stone.model}
+            models={models}
             {...{
               setSelected,
               selected,
@@ -84,6 +154,7 @@ function Home() {
       <div
         style={{
           height: "100vh",
+          background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
         }}
       >
         <Canvas>

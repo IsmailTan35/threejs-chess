@@ -2,163 +2,195 @@
   "data": [
     {
       "color": "white",
-      "type": "kale",
-      "position": [0, 0, 0.65]
+      "type": "rook",
+      "position": [0, 0, 0.9],
+      "model": "models/rook.glb"
     },
     {
       "color": "white",
-      "type": "at",
-      "position": [1, 0, 0.65]
+      "type": "knight",
+      "position": [1, 0, 0.9],
+      "model": "models/knight.glb"
     },
     {
       "color": "white",
-      "type": "fil",
-      "position": [2, 0, 0.65]
+      "type": "bishop",
+      "position": [2, 0, 0.9],
+      "model": "models/bishop.glb"
     },
     {
       "color": "white",
-      "type": "vezir",
-      "position": [3, 0, 0.65]
+      "type": "queen",
+      "position": [3, 0, 0.9],
+      "model": "models/queen.glb"
     },
     {
       "color": "white",
-      "type": "sah",
-      "position": [4, 0, 0.65]
+      "type": "king",
+      "position": [4, 0, 0.9],
+      "model": "models/king.glb"
     },
     {
       "color": "white",
-      "type": "fil",
-      "position": [5, 0, 0.65]
+      "type": "bishop",
+      "position": [5, 0, 0.9],
+      "model": "models/bishop.glb"
     },
     {
       "color": "white",
-      "type": "at",
-      "position": [6, 0, 0.65]
+      "type": "knight",
+      "position": [6, 0, 0.9],
+      "model": "models/knight.glb"
     },
     {
       "color": "white",
-      "type": "kale",
-      "position": [7, 0, 0.65]
+      "type": "rook",
+      "position": [7, 0, 0.9],
+      "model": "models/rook.glb"
     },
     {
       "color": "white",
-      "type": "piyon",
-      "position": [0, -1, 0.65]
+      "type": "pawn",
+      "position": [0, -1, 0.9],
+      "model": "pawn.glb"
     },
     {
       "color": "white",
-      "type": "piyon",
-      "position": [1, -1, 0.65]
+      "type": "pawn",
+      "position": [1, -1, 0.9],
+      "model": "pawn.glb"
     },
     {
       "color": "white",
-      "type": "piyon",
-      "position": [2, -1, 0.65]
+      "type": "pawn",
+      "position": [2, -1, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "white",
-      "type": "piyon",
-      "position": [3, -1, 0.65]
+      "type": "pawn",
+      "position": [3, -1, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "white",
-      "type": "piyon",
-      "position": [4, -1, 0.65]
+      "type": "pawn",
+      "position": [4, -1, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "white",
-      "type": "piyon",
-      "position": [5, -1, 0.65]
+      "type": "pawn",
+      "position": [5, -1, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "white",
-      "type": "piyon",
-      "position": [6, -1, 0.65]
+      "type": "pawn",
+      "position": [6, -1, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "white",
-      "type": "piyon",
-      "position": [7, -1, 0.65]
+      "type": "pawn",
+      "position": [7, -1, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "black",
-      "type": "sah",
-      "position": [4, -7, 0.65]
+      "type": "king",
+      "position": [4, -7, 0.9],
+      "model": "models/king.glb"
     },
     {
       "color": "black",
-      "type": "vezir",
-      "position": [3, -7, 0.65]
+      "type": "queen",
+      "position": [3, -7, 0.9],
+      "model": "models/queen.glb"
     },
     {
       "color": "black",
-      "type": "fil",
-      "position": [2, -7, 0.65]
+      "type": "bishop",
+      "position": [2, -7, 0.9],
+      "model": "models/bishop.glb"
     },
     {
       "color": "black",
-      "type": "fil",
-      "position": [5, -7, 0.65]
+      "type": "bishop",
+      "position": [5, -7, 0.9],
+      "model": "models/bishop.glb"
     },
     {
       "color": "black",
-      "type": "kale",
-      "position": [0, -7, 0.65]
+      "type": "rook",
+      "position": [0, -7, 0.6],
+      "model": "models/rook.glb"
     },
     {
       "color": "black",
-      "type": "kale",
-      "position": [7, -7, 0.65]
+      "type": "rook",
+      "position": [7, -7, 0.6],
+      "model": "models/rook.glb"
     },
     {
       "color": "black",
-      "type": "at",
-      "position": [1, -7, 0.65]
+      "type": "knight",
+      "position": [1, -7, 0.9],
+      "model": "models/knight.glb"
     },
     {
       "color": "black",
-      "type": "at",
-      "position": [6, -7, 0.65]
+      "type": "knight",
+      "position": [6, -7, 0.9],
+      "model": "models/knight.glb"
     },
     {
       "color": "black",
-      "type": "piyon",
-      "position": [0, -6, 0.65]
+      "type": "pawn",
+      "position": [0, -6, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "black",
-      "type": "piyon",
-      "position": [1, -6, 0.65]
+      "type": "pawn",
+      "position": [1, -6, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "black",
-      "type": "piyon",
-      "position": [2, -6, 0.65]
+      "type": "pawn",
+      "position": [2, -6, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "black",
-      "type": "piyon",
-      "position": [3, -6, 0.65]
+      "type": "pawn",
+      "position": [3, -6, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "black",
-      "type": "piyon",
-      "position": [4, -6, 0.65]
+      "type": "pawn",
+      "position": [4, -6, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "black",
-      "type": "piyon",
-      "position": [5, -6, 0.65]
+      "type": "pawn",
+      "position": [5, -6, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "black",
-      "type": "piyon",
-      "position": [6, -6, 0.65]
+      "type": "pawn",
+      "position": [6, -6, 0.9],
+      "model": "models/pawn.glb"
     },
     {
       "color": "black",
-      "type": "piyon",
-      "position": [7, -6, 0.65]
+      "type": "pawn",
+      "position": [7, -6, 0.9],
+      "model": "models/pawn.glb"
     }
   ]
 }
