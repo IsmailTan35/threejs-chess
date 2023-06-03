@@ -1,5 +1,5 @@
-import { useGLTF } from "@react-three/drei";
-import { memo, Suspense, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
+import pieces from "./move/pieces";
 
 const scales = {
   pawn: 0.04,
@@ -38,9 +38,32 @@ const positionZ = {
   knight: 0.45,
 };
 
-function Cylinder(props: any) {
+interface CylinderProps {
+  idx: number;
+  position: number[];
+  color: "white" | "black";
+  type: "pawn" | "queen" | "king" | "bishop" | "rook" | "knight";
+  model: boolean;
+  models: any;
+  setSquares: any;
+  setSelected: any;
+  selected: any;
+  step: string;
+  setStep: any;
+  stones: any;
+}
+
+function Cylinder(props: CylinderProps) {
+  const { setSquares, setSelected, selected, step, setStep, color, stones } =
+    props;
   const meshRef = useRef<any>();
   const [location, setLocation] = useState([0, 0, 1]);
+  pieces[null]({
+    color,
+    setSquares,
+    stones,
+    location,
+  });
 
   useEffect(() => {
     if (
@@ -64,12 +87,8 @@ function Cylinder(props: any) {
     ]);
   }, [props.position]);
 
-  useEffect(() => {
-    if (!meshRef) return;
-    meshRef.current.geometry;
-  }, [props.model, meshRef]);
-
   function handleClick() {
+    if (props.color !== props.step) return;
     if (props.selected.id === props.idx) {
       props.setSelected({
         id: null,
@@ -92,6 +111,12 @@ function Cylinder(props: any) {
           color: props.color,
           type: props.type,
           coordinate: location,
+        });
+        pieces[props.type]({
+          color,
+          setSquares,
+          stones,
+          location,
         });
       }, 100);
     }

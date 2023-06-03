@@ -1,76 +1,46 @@
-interface IPawn {
-  selected: any;
-  attributes: any;
-  stone: any;
-  ref: any;
-  setActive: any;
-  stones: any;
-  x: any;
-  y: any;
-}
+import { IPiece } from "./iPiece";
 
-function Pawn(props: IPawn) {
-  const { stones, selected, setActive, ref, x, y } = props;
-  const carp = props.selected.color === "white" ? 1 : -1;
-  let coordinates = [
-    [-1, carp * -1],
-    [1, carp * -1],
-    [0, carp * -1],
+function pawn(props: IPiece) {
+  const { location, color, setSquares } = props;
+  const direction = color === "white" ? -1 : 1;
+  const isSelectable: any = [
+    [location[0] - 1, location[1] + direction * 1],
+    [location[0] + 1, location[1] + direction * 1],
+    [location[0], location[1] + direction * 1],
+    [location[0], location[1] + direction * 2],
   ];
 
   if (
-    !props.attributes[props.selected.color].movedPawn?.includes(
-      props.selected.id
-    )
+    (direction === -1 && location[0] === 6) ||
+    (direction === 1 && location[0] === 1)
   ) {
-    coordinates.push([0, carp * -2]);
+    isSelectable.push([
+      location[0] + direction * 2,
+      location[1] + direction * 1,
+    ]);
   }
-  const filteredArr: any = stones.find((stone: any) => {
-    return stone.position[0] === x && stone.position[1] === -y;
-  });
-  const secondFilteredArr: any = stones.find(
-    (stone: any) =>
-      stone.position[0] === x && stone.position[1] === carp * +1 - y
-  );
 
-  for (let i = 0; i < coordinates.length; i++) {
-    const coordinate = coordinates[i];
-    if (
-      props.selected.coordinate[0] + coordinate[0] === x &&
-      props.selected.coordinate[1] + coordinate[1] === -y
-    ) {
-      switch (i) {
-        case 0:
-          if (filteredArr && filteredArr.color !== props.selected.color) {
-            ref.current.color.setHex(0xeeffee);
-            setActive(true);
-          }
-          break;
-        case 1:
-          if (filteredArr && filteredArr.color !== props.selected.color) {
-            ref.current.color.setHex(0xeeffee);
-            setActive(true);
-          }
-          break;
-        case 2:
-          if (!filteredArr) {
-            ref.current.color.setHex(0x00ff00);
-            setActive(true);
-          }
-          break;
-        case 3:
-          if (!filteredArr && !secondFilteredArr) {
-            ref.current.color.setHex(0x00ff00);
-            setActive(true);
-          }
-          break;
+  setSquares((squares: any[]) => {
+    return squares.map((item: any) => {
+      const isSelected = isSelectable.some(
+        ([row, col]: [number, number]) =>
+          row === item.position[0] && col === item.position[1]
+      );
+      if (isSelected && location[1] === item.position[1]) {
+        const isBlocked = squares.some(
+          (square: any) =>
+            square.position[0] === location[0] + direction &&
+            square.position[1] === location[1]
+        );
+
+        if (isBlocked) {
+          return { ...item, isSelected: false };
+        }
       }
-      break;
-    } else {
-      ref.current.color.setHex((x + y) % 2 === 0 ? 0x512500 : 0x808080);
-      setActive(false);
-    }
-  }
+
+      return { ...item, isSelected };
+    });
+  });
 }
 
-export default Pawn;
+export default pawn;
