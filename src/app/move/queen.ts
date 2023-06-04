@@ -1,13 +1,14 @@
 import { IPiece } from "./iPiece";
 
 const queen = (props: IPiece) => {
-  const { stones, setSquares, location } = props;
-  setSquares((e: any[]) => {
+  const { stones, setSquares, location, color } = props;
+  setSquares((squares: any[]) => {
     const stonesPositions = stones.map((item: any) => item.position);
     const [startRow, startCol] = location;
 
-    return e.map((item: any) => {
-      const [targetRow, targetCol] = item.position;
+    return squares.map((square: any) => {
+      const [targetRow, targetCol] = square.position;
+      let isTarget = "empty";
 
       let isBlocked = false;
 
@@ -41,10 +42,28 @@ const queen = (props: IPiece) => {
       } else {
         isBlocked = true;
       }
-
       const isSelected = !isBlocked;
 
-      return { ...item, isSelected };
+      if (isSelected) {
+        if (
+          square.position[0] === startRow &&
+          square.position[1] === startCol
+        ) {
+          isTarget = "me";
+        } else {
+          const targetStone = stones.find(
+            (stone: any) =>
+              stone.position[0] === targetRow && stone.position[1] === targetCol
+          );
+          if (targetStone) {
+            isTarget = targetStone.color === color ? "friendly" : "attack";
+          } else {
+            isTarget = "empty";
+          }
+        }
+      }
+
+      return { ...square, isSelected, isTarget };
     });
   });
 };

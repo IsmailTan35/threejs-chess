@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { positionZ, squareColors } from "./params";
 
 interface ISquare {
   idx: number;
@@ -13,9 +14,10 @@ interface ISquare {
   setStep: any;
   setStones: any;
   setAttributes: any;
-  position: any;
   isSelected: boolean;
-  isTarget: string;
+  isTarget: "empty" | "attack" | "friendly" | "me";
+  step: "white" | "black";
+  position?: number[];
 }
 
 function Square(props: ISquare) {
@@ -28,6 +30,8 @@ function Square(props: ISquare) {
     setAttributes,
     setStep,
     isTarget,
+    attributes,
+    step,
   } = props;
   const meshRef = useRef<any>();
   const x = parseInt((idx % 8).toString()[0]);
@@ -40,31 +44,78 @@ function Square(props: ISquare) {
 
   useEffect(() => {
     if (!isSelected) {
-      meshRef.current.color.setHex((x + y) % 2 === 0 ? 0x512500 : 0x808080);
+      meshRef.current.color.setHex(
+        squareColors[(x + y) % 2 === 0 ? "black" : "white"]
+      );
       return;
     } else {
-      meshRef.current.color.setHex(0x00ff00);
+      meshRef.current.color.setHex(squareColors["default"]);
     }
   }, [isSelected, meshRef, x, y]);
 
   useEffect(() => {
-    if (!isTarget && !isSelected) {
-      meshRef.current.color.setHex((x + y) % 2 === 0 ? 0x512500 : 0x808080);
+    if (isTarget === "empty" && !isSelected) {
+      meshRef.current.color.setHex(
+        squareColors[(x + y) % 2 === 0 ? "black" : "white"]
+      );
       return;
     }
 
-    if (!isTarget) {
-      meshRef.current.color.setHex(0x00ff00);
-    } else if (isTarget === "attack") {
-      meshRef.current.color.setHex(0xff3333);
-    } else if (isTarget === "friendly") {
-      meshRef.current.color.setHex(0xa9a9a9);
-    } else if (isTarget == "me") {
-      meshRef.current.color.setHex(0x656565);
-    } else {
-      meshRef.current.color.setHex(0x00ff00);
-    }
+    meshRef.current.color.setHex(squareColors[isTarget || "default"]);
   }, [isTarget, isSelected]);
+
+  const handleClick = () => {
+    if (selected.id === null || isTarget == "friendly") return;
+    if (selected.coordinate[0] === x && selected.coordinate[1] === y * -1)
+      return;
+    if (!isSelected) return;
+
+    setStones((stones: any) => {
+      const newPrv = [...stones];
+      if (isTarget === "attack") {
+        const target = newPrv.find(
+          (stone: any) =>
+            stone.position[0] === x && stone.position[1] === y * -1
+        );
+        if (target) {
+          const colorCol = {
+            white: 1,
+            black: 8,
+          };
+          const capturedLen = attributes[step].captured.length;
+          target.position = [
+            (capturedLen < 8 ? colorCol[step] : colorCol[step] + 1) *
+              (step === "white" ? -1 : 1),
+            (capturedLen % 8) * -1,
+            target.position[2],
+          ];
+          setAttributes[step]((prv: any) => ({
+            ...prv,
+            captured: [...prv.captured, target],
+          }));
+          target.isEnabled = false;
+        }
+      }
+      newPrv[selected.id].position = [x, -y, selected.coordinate[2]];
+      return newPrv;
+    });
+
+    setStep((prv: any) => (prv === "white" ? "black" : "white"));
+    setTimeout(() => {
+      setSelected((prv: any) => ({
+        id: null,
+        color: "",
+        type: "",
+        coordinate: [null, null, prv.coordinate[2]],
+      }));
+    }, 100);
+    if (selected.type === "pawn") {
+      setAttributes[selected.color]((prv: any) => ({
+        ...prv,
+        movedPawn: [...prv.movedPawn, selected.id],
+      }));
+    }
+  };
 
   return (
     <mesh
@@ -72,49 +123,18 @@ function Square(props: ISquare) {
       {...props}
       onPointerOver={event => {
         if (!isSelected) return;
-        meshRef.current.color.setHex(0xff3333);
+        meshRef.current.color.setHex(squareColors["hover"]);
       }}
+      position={[
+        parseInt((idx % 8).toString()[0]),
+        -(idx / 8).toString()[0],
+        0,
+      ]}
       onPointerOut={event => {
         if (!isSelected) return;
-        if (!isTarget) {
-          meshRef.current.color.setHex(0x00ff00);
-        } else if (isTarget === "attack") {
-          meshRef.current.color.setHex(0xff3333);
-        } else if (isTarget === "friendly") {
-          meshRef.current.color.setHex(0xa9a9a9);
-        } else if (isTarget == "me") {
-          meshRef.current.color.setHex(0x656565);
-        } else {
-          meshRef.current.color.setHex(0x00ff00);
-        }
+        meshRef.current.color.setHex(squareColors[isTarget || "default"]);
       }}
-      onClick={event => {
-        if (selected.id === null) return;
-        if (selected.coordinate[0] === x && selected.coordinate[1] === y * -1)
-          return;
-        if (!isSelected) return;
-        setStones((prv: any) => {
-          const newPrv = [...prv];
-          newPrv[selected.id].position = [x, -y, selected.coordinate[2]];
-          return newPrv;
-        });
-
-        setStep((prv: any) => (prv === "white" ? "black" : "white"));
-        setTimeout(() => {
-          setSelected((prv: any) => ({
-            id: null,
-            color: "",
-            type: "",
-            coordinate: [null, null, prv.coordinate[2]],
-          }));
-        }, 100);
-        if (selected.type === "pawn") {
-          setAttributes[selected.color]((prv: any) => ({
-            ...prv,
-            movedPawn: [...prv.movedPawn, selected.id],
-          }));
-        }
-      }}
+      onClick={handleClick}
     >
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial ref={meshRef} />

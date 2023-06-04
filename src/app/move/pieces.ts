@@ -12,9 +12,6 @@ const pieces = {
   queen: queen,
   bishop: bishop,
   knight: knight,
-  null: () => {
-    console.log(21321);
-  },
 };
 
 export default pieces;

@@ -1,13 +1,14 @@
 import { IPiece } from "./iPiece";
 
 const bishop = (props: IPiece) => {
-  const { stones, setSquares, location } = props;
-  setSquares((e: any[]) => {
+  const { stones, setSquares, location, color } = props;
+  setSquares((squares: any[]) => {
     const stonesPositions = stones.map((item: any) => item.position);
     const [startRow, startCol] = location;
 
-    return e.map((item: any) => {
-      const [targetRow, targetCol] = item.position;
+    return squares.map((square: any) => {
+      const [targetRow, targetCol] = square.position;
+      let isTarget = "empty";
 
       const rowDiff = Math.abs(targetRow - startRow);
       const colDiff = Math.abs(targetCol - startCol);
@@ -15,8 +16,8 @@ const bishop = (props: IPiece) => {
       let isBlocked = false;
 
       if (rowDiff === colDiff && rowDiff !== 0 && colDiff !== 0) {
-        const rowIncrement = targetRow > startRow ? 1 : -1;
-        const colIncrement = targetCol > startCol ? 1 : -1;
+        const rowIncrement = targetRow >= startRow ? 1 : -1;
+        const colIncrement = targetCol >= startCol ? 1 : -1;
 
         let currentRow = startRow + rowIncrement;
         let currentCol = startCol + colIncrement;
@@ -41,7 +42,29 @@ const bishop = (props: IPiece) => {
 
       const isSelected = !isBlocked;
 
-      return { ...item, isSelected };
+      if (square.position[0] === startRow && square.position[1] === startCol) {
+        isTarget = "me";
+      }
+
+      if (isSelected) {
+        if (
+          square.position[0] === startRow &&
+          square.position[1] === startCol
+        ) {
+          isTarget = "me";
+        } else {
+          const targetStone = stones.find(
+            (stone: any) =>
+              stone.position[0] === targetRow && stone.position[1] === targetCol
+          );
+          if (targetStone) {
+            isTarget = targetStone.color === color ? "friendly" : "attack";
+          } else {
+            isTarget = "empty";
+          }
+        }
+      }
+      return { ...square, isSelected, isTarget };
     });
   });
 };

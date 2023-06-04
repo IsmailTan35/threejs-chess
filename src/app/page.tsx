@@ -1,116 +1,76 @@
 "use client";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import stonesData from "./stones.json";
 import Cylinder from "./Cylinder";
 import Square from "./Square";
+import { IAttributes, ISelected, ISquareProps } from "./interfaces";
+import {
+  initialBlackAttributes,
+  initialSelected,
+  initialWhiteAttributes,
+} from "./initialValues";
 
-function Areas(props: any) {
-  const [step, setStep] = useState("white");
+function Areas() {
+  const [step, setStep] = useState<"white" | "black">("white");
   const [stones, setStones] = useState(stonesData.data);
-  const [whiteAttributes, setWhiteAttributes] = useState({
-    movedPawn: [],
-    rog: false,
-  });
-  const [blackAttributes, setBlackAttributes] = useState({
-    movedPawn: [],
-    rog: false,
-  });
-  const [selected, setSelected] = useState({
-    id: null,
-    color: "",
-    type: "",
-    coordinate: [null, null, 1],
-  });
-  const [squares, setSquares] = useState(
-    Array(64)
-      .fill(() => {
-        return;
-      })
-      .map((_, index) => ({
-        position: [
-          parseInt((index % 8).toString()[0]),
-          -(index / 8).toString()[0],
-          0,
-        ],
-        setSelected,
-        setStones,
-        setStep,
-        setAttributes: {
-          white: setWhiteAttributes,
-          black: setBlackAttributes,
-        },
-        isSelected: false,
-        isTarget: null,
-      }))
+  const [whiteAttributes, setWhiteAttributes] = useState<IAttributes>(
+    initialWhiteAttributes
   );
-  const all: any = useGLTF("models/chess_set.glb");
-  const rook: any = useGLTF("models/rook.glb");
-
-  const models = {
-    white: {
-      pawn: {
-        material: all.materials["Chess_White"],
-        geometry: all.nodes.Object_4.geometry,
+  const [blackAttributes, setBlackAttributes] = useState<IAttributes>(
+    initialBlackAttributes
+  );
+  const [selected, setSelected] = useState<ISelected>(initialSelected);
+  const createSquare = (idx: number): ISquareProps => {
+    return {
+      idx,
+      position: [
+        parseInt((idx % 8).toString()[0]),
+        -(idx / 8).toString()[0],
+        0,
+      ],
+      setSelected,
+      setStones,
+      setStep,
+      setAttributes: {
+        white: setWhiteAttributes,
+        black: setBlackAttributes,
       },
-      bishop: {
-        material: all.materials["Chess_White"],
-        geometry: all.nodes.Object_21.geometry,
+      attributes: {
+        white: whiteAttributes,
+        black: blackAttributes,
       },
-      knight: {
-        material: all.materials["Chess_White"],
-        geometry: all.nodes.Object_81.geometry,
-      },
-      rook: {
-        material: all.materials["Chess_White"],
-        geometry: rook.nodes.Tower_Material011_0.geometry,
-      },
-      queen: {
-        material: all.materials["Chess_White"],
-        geometry: all.nodes.Object_15.geometry,
-      },
-      king: {
-        material: all.materials["Chess_White"],
-        geometry: all.nodes.Object_17.geometry,
-      },
-    },
-    black: {
-      pawn: {
-        material: all.materials["Material.007"],
-        geometry: all.nodes.Object_4.geometry,
-      },
-      bishop: {
-        material: all.materials["Material.007"],
-        geometry: all.nodes.Object_21.geometry,
-      },
-      knight: {
-        material: all.materials["Material.007"],
-        geometry: all.nodes.Object_81.geometry,
-      },
-      rook: {
-        material: all.materials["Material.007"],
-        geometry: rook.nodes.Tower_Material011_0.geometry,
-      },
-      queen: {
-        material: all.materials["Material.007"],
-        geometry: all.nodes.Object_15.geometry,
-      },
-      king: {
-        material: all.materials["Material.007"],
-        geometry: all.nodes.Object_17.geometry,
-      },
-    },
-    all: {
-      material: all.materials["Chess_White"],
-      geometry: all.nodes.Object_83.geometry,
-    },
+      isSelected: false,
+      isTarget: "empty",
+      stones,
+      selected,
+      step,
+    };
   };
+
+  const initialSquares: ISquareProps[] = Array.from({ length: 64 }, (_, idx) =>
+    createSquare(idx)
+  );
+  const [squares, setSquares] = useState<ISquareProps[]>(initialSquares);
+
+  useEffect(() => {
+    setStones(prevStones =>
+      prevStones.map(item => ({
+        ...item,
+        isEnabled: true,
+      }))
+    );
+  }, []);
 
   useEffect(() => {
     if (!selected.id) {
-      setSquares(prv =>
-        prv.map(item => ({ ...item, isSelected: false, isTarget: null }))
+      setSquares(prevSquares =>
+        prevSquares.map(item => ({
+          ...item,
+          isSelected: false,
+          isTarget: "empty",
+        }))
       );
     }
   }, [selected]);
@@ -122,7 +82,6 @@ function Areas(props: any) {
           return (
             <Square
               key={index}
-              idx={index}
               {...{
                 ...item,
                 stones,
@@ -131,6 +90,7 @@ function Areas(props: any) {
                   white: whiteAttributes,
                   black: blackAttributes,
                 },
+                step,
               }}
             />
           );
@@ -144,7 +104,6 @@ function Areas(props: any) {
               color={stone.color}
               type={stone.type}
               model={stone.model}
-              models={models}
               {...{
                 setSquares,
                 setSelected,
@@ -152,6 +111,15 @@ function Areas(props: any) {
                 step,
                 setStep,
                 stones,
+                isEnabled: stone.isEnabled,
+                setAttributes: {
+                  white: setWhiteAttributes,
+                  black: setBlackAttributes,
+                },
+                attributes: {
+                  white: whiteAttributes,
+                  black: blackAttributes,
+                },
               }}
             />
           );
@@ -162,6 +130,16 @@ function Areas(props: any) {
 }
 
 function Home() {
+  const controlsRef = useRef<any>();
+  const cameraRef = useRef<any>();
+
+  const handleResetCamera = () => {
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+    camera.position.set(0, -7, 7);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  };
   return (
     <>
       <div
@@ -170,18 +148,49 @@ function Home() {
           background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
         }}
       >
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            top: "10px",
+            left: "10px",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              background: "white",
+              color: "black",
+              padding: "10px",
+              borderRadius: "10px",
+              fontSize: "20px",
+              width: "max-content",
+              cursor: "pointer",
+              zIndex: 999,
+            }}
+            onClick={handleResetCamera}
+          >
+            Kamerayı Sıfırla
+          </div>
+        </div>
+
         <Canvas>
           <ambientLight intensity={0.5} />
-          <PerspectiveCamera makeDefault position={[0, -7, 7]} />
+          <PerspectiveCamera
+            makeDefault
+            ref={cameraRef}
+            position={[0, -7, 7]}
+          />
           <pointLight position={[0, 0, 10]} />
           <Areas />
           <OrbitControls
+            ref={controlsRef}
             minZoom={10}
             maxZoom={10}
-            enableZoom={false}
-            enableRotate={false}
-            enableDamping={false}
-            enablePan={false}
+            // enableZoom={false}
+            // enableRotate={false}
+            // enableDamping={false}
+            // enablePan={false}
           />
         </Canvas>
       </div>

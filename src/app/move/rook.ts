@@ -2,11 +2,11 @@ import { IPiece } from "./iPiece";
 
 const rook = (props: IPiece) => {
   const { setSquares, stones, location, color } = props;
-  setSquares((square: any) => {
+  setSquares((squares: any) => {
     const stonesPositions = stones.map((item: any) => item.position);
     const [startRow, startCol] = location;
-    return square.map((item: any) => {
-      let isTarget = null;
+    return squares.map((item: any) => {
+      let isTarget = "empty";
       const [targetRow, targetCol] = item.position;
 
       const isBlocked = stonesPositions.some(([pieceRow, pieceCol, c]: any) => {
@@ -44,6 +44,7 @@ const rook = (props: IPiece) => {
           }
         }
       }
+
       return {
         ...item,
         isSelected,

@@ -1,96 +1,113 @@
 import { memo, useEffect, useRef, useState } from "react";
 import pieces from "./move/pieces";
+import { scales, rotation, positionZ } from "./params";
+import { PieceProps } from "./interfaces";
+import { useGLTF } from "@react-three/drei";
 
-const scales = {
-  pawn: 0.04,
-  queen: 0.06,
-  king: 0.05,
-  bishop: 0.05,
-  rook: 0.25,
-  knight: 0.4,
-};
+function Cylinder(props: PieceProps) {
+  const {
+    setSquares,
+    setSelected,
+    selected,
+    step,
+    setStep,
+    color,
+    stones,
+    type,
+    position,
+    isEnabled,
+    idx,
+    model,
+    setAttributes,
+    attributes,
+  } = props;
 
-const rotation = {
-  white: {
-    pawn: [0, 1.6, 0],
-    queen: [0, 1.6, 0],
-    king: [0, 1.6, 0],
-    bishop: [0, 1.6, 0],
-    rook: [0, 0, 0],
-    knight: [0, 3.15, 0],
-  },
-  black: {
-    pawn: [0, 1.6, 0],
-    queen: [0, 1.6, 0],
-    king: [0, 1.6, 0],
-    bishop: [0, 1.6, 0],
-    rook: [0, 0, 0],
-    knight: [0, 3.15, 3.2],
-  },
-};
-
-const positionZ = {
-  pawn: 0.26,
-  queen: 0.59,
-  king: 0.64,
-  bishop: 0.48,
-  rook: 0.03,
-  knight: 0.45,
-};
-
-interface CylinderProps {
-  idx: number;
-  position: number[];
-  color: "white" | "black";
-  type: "pawn" | "queen" | "king" | "bishop" | "rook" | "knight";
-  model: boolean;
-  models: any;
-  setSquares: any;
-  setSelected: any;
-  selected: any;
-  step: string;
-  setStep: any;
-  stones: any;
-}
-
-function Cylinder(props: CylinderProps) {
-  const { setSquares, setSelected, selected, step, setStep, color, stones } =
-    props;
   const meshRef = useRef<any>();
   const [location, setLocation] = useState([0, 0, 1]);
-  pieces[null]({
-    color,
-    setSquares,
-    stones,
-    location,
-  });
+  const all: any = useGLTF("models/chess_set.glb");
+  const rook: any = useGLTF("models/rook.glb");
+
+  const models = {
+    white: {
+      pawn: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_4.geometry,
+      },
+      bishop: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_21.geometry,
+      },
+      knight: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_81.geometry,
+      },
+      rook: {
+        material: all.materials["Chess_White"],
+        geometry: rook.nodes.Tower_Material011_0.geometry,
+      },
+      queen: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_15.geometry,
+      },
+      king: {
+        material: all.materials["Chess_White"],
+        geometry: all.nodes.Object_17.geometry,
+      },
+    },
+    black: {
+      pawn: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_4.geometry,
+      },
+      bishop: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_21.geometry,
+      },
+      knight: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_81.geometry,
+      },
+      rook: {
+        material: all.materials["Material.007"],
+        geometry: rook.nodes.Tower_Material011_0.geometry,
+      },
+      queen: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_15.geometry,
+      },
+      king: {
+        material: all.materials["Material.007"],
+        geometry: all.nodes.Object_17.geometry,
+      },
+    },
+    all: {
+      material: all.materials["Chess_White"],
+      geometry: all.nodes.Object_83.geometry,
+    },
+  };
 
   useEffect(() => {
     if (
-      props.selected.color === props.color &&
-      props.selected.type === props.type &&
-      props.selected.id === props.idx
+      selected.color === color &&
+      selected.type === type &&
+      selected.id === idx
     ) {
       setLocation([
-        props.selected.coordinate[0],
-        props.selected.coordinate[1],
-        props.selected.coordinate[2],
+        selected.coordinate[0],
+        selected.coordinate[1],
+        selected.coordinate[2],
       ]);
     }
-  }, [props.selected.coordinate]);
+  }, [selected.coordinate]);
 
   useEffect(() => {
-    setLocation([
-      props.position[0],
-      props.position[1],
-      positionZ[`${props.type}`],
-    ]);
-  }, [props.position]);
+    setLocation([position[0], position[1], positionZ[`${type}`]]);
+  }, [position]);
 
   function handleClick() {
-    if (props.color !== props.step) return;
-    if (props.selected.id === props.idx) {
-      props.setSelected({
+    if (color !== step || !isEnabled) return;
+    if (selected.id === idx) {
+      setSelected({
         id: null,
         color: "",
         type: "",
@@ -98,25 +115,34 @@ function Cylinder(props: CylinderProps) {
       });
       return;
     }
-    if (props.step === props.color) {
-      props.setSelected({
+    if (step === color) {
+      setSelected({
         id: null,
         color: "",
         type: "",
         coordinate: [null, null, 1],
       });
       setTimeout(() => {
-        props.setSelected({
-          id: props.idx,
-          color: props.color,
-          type: props.type,
+        setSelected({
+          id: idx,
+          color: color,
+          type: type,
           coordinate: location,
         });
-        pieces[props.type]({
+        pieces[type]({
+          step,
           color,
           setSquares,
           stones,
           location,
+          setAttributes,
+          attributes,
+          selected: {
+            id: idx,
+            color: color,
+            type: type,
+            coordinate: location,
+          },
         });
       }, 100);
     }
@@ -126,32 +152,28 @@ function Cylinder(props: CylinderProps) {
     <>
       <mesh
         ref={meshRef}
-        position={location}
-        scale={scales[`${props.type}`]}
-        geometry={
-          props.model
-            ? props.models[`${props.color}`][`${props.type}`]?.geometry
-            : null
-        }
-        material={
-          props.model
-            ? props.models[`${props.color}`][`${props.type}`]?.material
-            : null
-        }
+        position={[location[0], location[1], location[2]]}
+        scale={scales[`${type}`]}
+        geometry={model ? models[`${color}`][`${type}`]?.geometry : null}
+        material={model ? models[`${color}`][`${type}`]?.material : null}
         onClick={handleClick}
-        rotation={rotation[`${props.color}`][`${props.type}`]}
+        rotation={[
+          rotation[`${color}`][`${type}`][0],
+          rotation[`${color}`][`${type}`][1],
+          rotation[`${color}`][`${type}`][2],
+        ]}
         onPointerOver={e => {
-          if (props.step !== props.color) return;
+          if (step !== color) return;
           document.getElementsByTagName("html")[0].style.cursor = "pointer";
         }}
         onPointerOut={e => {
           document.getElementsByTagName("html")[0].style.cursor = "default";
         }}
       >
-        {!props.model ? (
+        {!model ? (
           <>
             <cylinderGeometry args={[1, 1, 1, 32]} />
-            <meshStandardMaterial color={props.color} />
+            <meshStandardMaterial color={color} />
           </>
         ) : null}
       </mesh>
