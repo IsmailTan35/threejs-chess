@@ -50,3 +50,18 @@ export interface ISelected {
   type: string;
   coordinate: [any, any, number];
 }
+
+export interface IChessBoardProps {
+  step: "white" | "black";
+  setStep: any;
+  stones: any;
+  setStones: any;
+  selected: any;
+  setSquares: any;
+  squares: any;
+  setSelected: any;
+  setWhiteAttributes: any;
+  blackAttributes: any;
+  whiteAttributes: any;
+  setBlackAttributes: any;
+}

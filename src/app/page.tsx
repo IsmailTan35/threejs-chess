@@ -3,17 +3,28 @@ import { memo, useEffect, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import stonesData from "./stones.json";
-import Cylinder from "./Cylinder";
-import Square from "./Square";
+
 import { IAttributes, ISelected, ISquareProps } from "./interfaces";
 import {
   initialBlackAttributes,
   initialSelected,
   initialWhiteAttributes,
 } from "./initialValues";
+import ChessBoard from "./Chessboard";
 
-function Areas(props: any) {
-  const { step, setStep, stones, setStones } = props;
+function Home() {
+  const controlsRef = useRef<any>();
+  const cameraRef = useRef<any>();
+
+  const handleResetCamera = () => {
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+    camera.position.set(0, -7, 7);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  };
+  const [step, setStep] = useState<"white" | "black">("white");
+  const [stones, setStones] = useState(stonesData.data);
   const [whiteAttributes, setWhiteAttributes] = useState<IAttributes>(
     initialWhiteAttributes
   );
@@ -52,96 +63,19 @@ function Areas(props: any) {
     createSquare(idx)
   );
   const [squares, setSquares] = useState<ISquareProps[]>(initialSquares);
-
-  useEffect(() => {
-    setStones((prevStones: any) =>
-      prevStones.map((item: any) => ({
+  const handleResetScorboard = () => {
+    setStones(
+      stonesData.data.map((item: any) => ({
         ...item,
         isEnabled: true,
       }))
     );
-  }, []);
-
-  useEffect(() => {
-    if (!selected.id) {
-      setSquares(prevSquares =>
-        prevSquares.map(item => ({
-          ...item,
-          isSelected: false,
-          isTarget: "empty",
-        }))
-      );
-    }
-  }, [selected]);
-
-  return (
-    <>
-      <mesh position={[-3.5, 3.5, 0]}>
-        {squares.map((item, index) => {
-          return (
-            <Square
-              key={index}
-              {...{
-                ...item,
-                stones,
-                selected,
-                attributes: {
-                  white: whiteAttributes,
-                  black: blackAttributes,
-                },
-                step,
-              }}
-            />
-          );
-        })}
-        {stones.map((stone: any, index: number) => {
-          return (
-            <Cylinder
-              idx={index}
-              key={index}
-              position={stone.position}
-              color={stone.color}
-              type={stone.type}
-              model={stone.model}
-              {...{
-                setSquares,
-                setSelected,
-                selected,
-                step,
-                setStep,
-                stones,
-                isEnabled: stone.isEnabled,
-                setAttributes: {
-                  white: setWhiteAttributes,
-                  black: setBlackAttributes,
-                },
-                attributes: {
-                  white: whiteAttributes,
-                  black: blackAttributes,
-                },
-              }}
-            />
-          );
-        })}
-      </mesh>
-    </>
-  );
-}
-
-function Home() {
-  const controlsRef = useRef<any>();
-  const cameraRef = useRef<any>();
-
-  const handleResetCamera = () => {
-    const camera = cameraRef.current;
-    const controls = controlsRef.current;
-    camera.position.set(0, -7, 7);
-    controls.target.set(0, 0, 0);
-    controls.update();
+    setStep("white");
+    setWhiteAttributes(initialWhiteAttributes);
+    setBlackAttributes(initialBlackAttributes);
+    setSelected(initialSelected);
+    setSquares(initialSquares);
   };
-  const [step, setStep] = useState<"white" | "black">("white");
-  const [stones, setStones] = useState(stonesData.data);
-
   return (
     <>
       <div
@@ -156,11 +90,12 @@ function Home() {
             display: "flex",
             top: "10px",
             left: "10px",
+            flexDirection: "column",
+            gap: "10px",
           }}
         >
           <div
             style={{
-              position: "absolute",
               background: "white",
               color: "black",
               padding: "10px",
@@ -174,6 +109,22 @@ function Home() {
             onClick={handleResetCamera}
           >
             Kamerayı Sıfırla
+          </div>
+          <div
+            style={{
+              background: "white",
+              color: "black",
+              padding: "10px",
+              borderRadius: "10px",
+              fontSize: "20px",
+              width: "max-content",
+              cursor: "pointer",
+              zIndex: 999,
+              userSelect: "none",
+            }}
+            onClick={handleResetScorboard}
+          >
+            Hamleleri Sıfırla
           </div>
         </div>
         <div
@@ -257,9 +208,9 @@ function Home() {
               <div>Beyaz:</div>
               <div>
                 {
-                  stones.filter(
-                    stone => stone.color != "black" && stone.position[0] > 0
-                  ).length
+                  stones.filter(stone => {
+                    return stone.color != "black" && stone.position[0] <= 7;
+                  }).length
                 }
               </div>
             </div>
@@ -276,7 +227,7 @@ function Home() {
               <div>
                 {
                   stones.filter(
-                    stone => stone.color != "white" && stone.position[0] > 0
+                    stone => stone.color != "white" && stone.position[0] >= 0
                   ).length
                 }
               </div>
@@ -291,12 +242,20 @@ function Home() {
             position={[0, -7, 7]}
           />
           <pointLight position={[0, 0, 10]} />
-          <Areas
+          <ChessBoard
             {...{
               step,
               setStep,
               stones,
               setStones,
+              whiteAttributes,
+              setWhiteAttributes,
+              blackAttributes,
+              setBlackAttributes,
+              selected,
+              setSelected,
+              squares,
+              setSquares,
             }}
           />
           <OrbitControls

@@ -68,14 +68,16 @@ function pawn(props: IPiece) {
               stone.position[1] === square.position[1]
           );
           if (targetStone) {
-            isTarget = targetStone.color === color ? "attack" : "friendly";
             if (
-              !isBlocked &&
-              isTarget === "attack" &&
-              selected.color !== color
+              targetStone.color !== color &&
+              ((targetStone.position[0] === isSelectable[0][0] &&
+                targetStone.position[1] === isSelectable[0][1]) ||
+                (targetStone.position[0] === isSelectable[1][0] &&
+                  targetStone.position[1] === isSelectable[1][1]))
             ) {
-              isTarget = "empty";
-              isSelected = false;
+              isTarget = "attack";
+            } else {
+              isTarget = "friendly";
             }
           } else {
             if (isBlocked) {
@@ -93,6 +95,7 @@ function pawn(props: IPiece) {
           }
         }
       }
+
       return {
         ...square,
         isSelected,
