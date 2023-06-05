@@ -18,7 +18,6 @@ function king(props: IPiece) {
         (square.position[0] === startRow && square.position[1] === startCol);
 
       if (isSelected) {
-        console.log(isSelected);
         if (
           square.position[0] === startRow &&
           square.position[1] === startCol

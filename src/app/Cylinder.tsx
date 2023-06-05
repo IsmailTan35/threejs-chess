@@ -2,7 +2,8 @@ import { memo, useEffect, useRef, useState } from "react";
 import pieces from "./move/pieces";
 import { scales, rotation, positionZ } from "./params";
 import { PieceProps } from "./interfaces";
-import { useGLTF } from "@react-three/drei";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { useLoader } from "@react-three/fiber";
 
 function Cylinder(props: PieceProps) {
   const {
@@ -24,8 +25,10 @@ function Cylinder(props: PieceProps) {
 
   const meshRef = useRef<any>();
   const [location, setLocation] = useState([0, 0, 1]);
-  const all: any = useGLTF("models/chess_set.glb");
-  const rook: any = useGLTF("models/rook.glb");
+  const [all, rook]: any = useLoader(GLTFLoader, [
+    "models/chess_set.glb",
+    "models/rook.glb",
+  ]);
 
   const models = {
     white: {
@@ -129,21 +132,23 @@ function Cylinder(props: PieceProps) {
           type: type,
           coordinate: location,
         });
-        pieces[type]({
-          step,
-          color,
-          setSquares,
-          stones,
-          location,
-          setAttributes,
-          attributes,
-          selected: {
-            id: idx,
-            color: color,
-            type: type,
-            coordinate: location,
-          },
-        });
+        setTimeout(() => {
+          pieces[type]({
+            step,
+            color,
+            setSquares,
+            stones,
+            location,
+            setAttributes,
+            attributes,
+            selected: {
+              id: idx,
+              color: color,
+              type: type,
+              coordinate: location,
+            },
+          });
+        }, 100);
       }, 100);
     }
   }

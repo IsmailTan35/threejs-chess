@@ -68,13 +68,12 @@ function pawn(props: IPiece) {
               stone.position[1] === square.position[1]
           );
           if (targetStone) {
-            isTarget = targetStone.color === color ? "friendly" : "attack";
+            isTarget = targetStone.color === color ? "attack" : "friendly";
             if (
               !isBlocked &&
               isTarget === "attack" &&
               selected.color !== color
             ) {
-              console.log(21);
               isTarget = "empty";
               isSelected = false;
             }
