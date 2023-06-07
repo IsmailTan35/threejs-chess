@@ -12,7 +12,7 @@ import {
 } from "./initialValues";
 import ChessBoard from "./chessboard";
 import Loading from "./loading";
-import ScoreBoard from "./scoreBoard";
+import ScoreBoard from "./scoreboard";
 
 function Home() {
   const controlsRef = useRef<any>();
