@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { createPortal } from "react-dom";
 
 const Loading = () => {
-  const [isLoaded, setIsLoaded] = React.useState(false);
-
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [windowLoaded, setWindowLoaded] = useState(false);
   useEffect(() => {
     let loader = new GLTFLoader();
     loader.load("models/chess_set.glb", gltf => {
@@ -14,10 +14,13 @@ const Loading = () => {
       }, 500);
     });
   }, []);
-
+  useEffect(() => {
+    setWindowLoaded(true);
+  }, []);
   return (
     <>
       {!isLoaded &&
+        windowLoaded &&
         createPortal(
           <div
             style={{

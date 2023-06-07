@@ -1,5 +1,5 @@
 "use client";
-import { memo, useState, useRef, useLayoutEffect } from "react";
+import { memo, useState, useRef, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
 import stonesData from "./stones.json";
@@ -10,9 +10,9 @@ import {
   initialSelected,
   initialWhiteAttributes,
 } from "./initialValues";
-import Chessboard from "./Chessboard";
+import Chessboard from "./chessboard";
 import Loading from "./loading";
-import Scoreboard from "./Scoreboard";
+import Scoreboard from "./scoreboard";
 function Home() {
   const controlsRef = useRef<any>();
   const cameraRef = useRef<any>();
@@ -68,7 +68,7 @@ function Home() {
     }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     handleResize();
     window.addEventListener("resize", handleResize);
 

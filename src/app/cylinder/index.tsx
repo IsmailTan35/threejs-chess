@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
-import pieces from "./move/pieces";
-import { scales, rotation, positionZ } from "./params";
-import { PieceProps } from "./interfaces";
+import pieces from "../move/pieces";
+import { scales, rotation, positionZ } from "../params";
+import { PieceProps } from "../interfaces";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useLoader } from "@react-three/fiber";
 

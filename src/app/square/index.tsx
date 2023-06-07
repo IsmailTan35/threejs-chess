@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { squareColors } from "./params";
+import { squareColors } from "../params";
 
 interface ISquare {
   idx: number;
