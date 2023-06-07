@@ -1,6 +1,6 @@
 "use client";
-import { memo, useEffect, useState, useRef, useLayoutEffect } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { memo, useState, useRef, useLayoutEffect } from "react";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
 import stonesData from "./stones.json";
 
