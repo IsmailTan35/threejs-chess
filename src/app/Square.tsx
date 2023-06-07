@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { positionZ, squareColors } from "./params";
+import { squareColors } from "./params";
 
 interface ISquare {
   idx: number;
@@ -50,8 +50,6 @@ function Square(props: ISquare) {
 
   useEffect(() => {
     if (isTarget === "empty" && !isSelected) {
-      console.log("first");
-
       meshRef.current.color.setHex(
         squareColors[(x + y) % 2 === 0 ? "black" : "white"]
       );
@@ -59,8 +57,7 @@ function Square(props: ISquare) {
     }
 
     meshRef.current.color.setHex(squareColors[isTarget || "default"]);
-    console.log(squareColors[isTarget]);
-  }, [isTarget, isSelected]);
+  }, [isTarget, isSelected, x, y]);
 
   const handleClick = () => {
     if (selected.id === null || isTarget == "friendly" || isTarget === "king")

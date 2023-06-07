@@ -59,8 +59,6 @@ function Home() {
   const [squares, setSquares] = useState<ISquareProps[]>(initialSquares);
 
   const handleResize = () => {
-    console.log(123);
-
     const screenWidth = window.innerWidth;
     const camera = cameraRef.current;
     if (!camera) return;
@@ -76,7 +74,7 @@ function Home() {
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [cameraRef, window.innerWidth]);
+  }, [cameraRef]);
 
   return (
     <>

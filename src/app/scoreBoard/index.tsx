@@ -7,6 +7,7 @@ import {
 } from "../initialValues";
 import stonesData from "../stones.json";
 import "../scoreboard.css";
+
 interface IProps {
   step: "white" | "black";
   stones: any;
