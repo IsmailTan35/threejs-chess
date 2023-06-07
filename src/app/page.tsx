@@ -10,10 +10,9 @@ import {
   initialSelected,
   initialWhiteAttributes,
 } from "./initialValues";
-import ChessBoard from "./chessboard";
+import Chessboard from "./Chessboard";
 import Loading from "./loading";
-import ScoreBoard from "./scoreboard";
-
+import Scoreboard from "./Scoreboard";
 function Home() {
   const controlsRef = useRef<any>();
   const cameraRef = useRef<any>();
@@ -84,7 +83,7 @@ function Home() {
           background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
         }}
       >
-        <ScoreBoard
+        <Scoreboard
           {...{
             step,
             setStep,
@@ -112,7 +111,7 @@ function Home() {
             position={[0, -7, 7]}
           />
           <pointLight position={[0, 0, 10]} />
-          <ChessBoard
+          <Chessboard
             {...{
               step,
               setStep,
