@@ -58,7 +58,11 @@ const bishop = (props: IPiece) => {
               stone.position[0] === targetRow && stone.position[1] === targetCol
           );
           if (targetStone) {
-            isTarget = targetStone.color === color ? "friendly" : "attack";
+            if (targetStone.type === "king") {
+              isTarget = "king";
+            } else {
+              isTarget = targetStone.color === color ? "friendly" : "attack";
+            }
           } else {
             isTarget = "empty";
           }

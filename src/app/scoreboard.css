@@ -1,0 +1,105 @@
+.camera-reset,
+.move-reset {
+  background: white;
+  color: black;
+  padding: 10px;
+  border-radius: 3px;
+  font-size: 20px;
+  width: max-content;
+  cursor: pointer;
+  z-index: 999;
+  user-select: none;
+}
+
+.game-turn {
+  position: absolute;
+  left: calc(50vw - 125px);
+  z-index: 999;
+  user-select: none;
+}
+
+.game-turn-title {
+  background: white;
+  color: black;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.game-turn-player {
+  background: white;
+  color: red;
+  padding: 10px;
+  font-size: 30px;
+  width: 250px;
+  margin-top: 10px;
+  border-radius: 3px;
+}
+
+.remaining-stones {
+  position: absolute;
+  z-index: 999;
+  right: 10px;
+  top: 10px;
+  user-select: none;
+}
+
+.remaining-stones-title {
+  background: white;
+  color: black;
+  padding: 10px;
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 20px;
+  width: 200px;
+  text-align: center;
+}
+
+.remaining-stones-white,
+.remaining-stones-black {
+  display: flex;
+  background: white;
+  color: black;
+  padding: 10px;
+  border-radius: 3px;
+  padding: 10px;
+  text-align: center;
+  justify-content: space-between;
+}
+
+@media only screen and (min-width: 600px) {
+  .game-turn {
+    top: 10px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .game-turn {
+    bottom: 10px;
+    left: calc(50vw - 50px);
+  }
+
+  .game-turn-title {
+    font-size: 10px;
+    padding: 5px;
+  }
+  .game-turn-player {
+    font-size: 10px;
+    width: 100px;
+    padding: 5px;
+  }
+  .camera-reset,
+  .move-reset {
+    font-size: 10px;
+    padding: 5px;
+    width: 85px;
+  }
+  .remaining-stones-title {
+    font-size: 10px;
+    width: 125px;
+    padding: 5px;
+  }
+  .remaining-stones-white,
+  .remaining-stones-black {
+    font-size: 10px;
+    padding: 5px;
+  }
+}

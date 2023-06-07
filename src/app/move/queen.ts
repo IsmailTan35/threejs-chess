@@ -56,7 +56,11 @@ const queen = (props: IPiece) => {
               stone.position[0] === targetRow && stone.position[1] === targetCol
           );
           if (targetStone) {
-            isTarget = targetStone.color === color ? "friendly" : "attack";
+            if (targetStone.type === "king" && targetStone.color !== color) {
+              isTarget = "king";
+            } else {
+              isTarget = targetStone.color === color ? "friendly" : "attack";
+            }
           } else {
             isTarget = "empty";
           }

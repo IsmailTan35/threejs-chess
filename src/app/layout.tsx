@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Chess",
+  title: "Chess 3D",
   description: "Chess game in 3D Created by @github:Ismailtan35",
 };
 

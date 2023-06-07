@@ -15,7 +15,7 @@ interface ISquare {
   setStones: any;
   setAttributes: any;
   isSelected: boolean;
-  isTarget: "empty" | "attack" | "friendly" | "me";
+  isTarget: "empty" | "attack" | "friendly" | "me" | "king";
   step: "white" | "black";
   position?: number[];
 }
@@ -38,11 +38,6 @@ function Square(props: ISquare) {
   const y = parseInt((idx / 8).toString()[0]);
 
   useEffect(() => {
-    // meshRef.current.color.setHex(0x00ff00);
-    // meshRef.current.color.setHex((x + y) % 2 === 0 ? 0x512500 : 0x808080);
-  }, [selected]);
-
-  useEffect(() => {
     if (!isSelected) {
       meshRef.current.color.setHex(
         squareColors[(x + y) % 2 === 0 ? "black" : "white"]
@@ -55,6 +50,8 @@ function Square(props: ISquare) {
 
   useEffect(() => {
     if (isTarget === "empty" && !isSelected) {
+      console.log("first");
+
       meshRef.current.color.setHex(
         squareColors[(x + y) % 2 === 0 ? "black" : "white"]
       );
@@ -62,10 +59,12 @@ function Square(props: ISquare) {
     }
 
     meshRef.current.color.setHex(squareColors[isTarget || "default"]);
+    console.log(squareColors[isTarget]);
   }, [isTarget, isSelected]);
 
   const handleClick = () => {
-    if (selected.id === null || isTarget == "friendly") return;
+    if (selected.id === null || isTarget == "friendly" || isTarget === "king")
+      return;
     if (selected.coordinate[0] === x && selected.coordinate[1] === y * -1)
       return;
     if (!isSelected) return;

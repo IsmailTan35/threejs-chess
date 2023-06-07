@@ -44,6 +44,7 @@ const squareColors = {
   white: "0x808080",
   black: "0x512500",
   hover: "0xff3333",
+  king: "0x000000",
 };
 
 export { scales, rotation, positionZ, squareColors };

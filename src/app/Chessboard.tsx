@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import Cylinder from "./Cylinder";
-import Square from "./Square";
+import Cylinder from "./cylinder";
+import Square from "./square";
 import { IChessBoardProps } from "./interfaces";
 
 function ChessBoard(props: IChessBoardProps) {
