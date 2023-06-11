@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import Cylinder from "../cylinder";
-import Square from "../square";
-import { IChessBoardProps } from "../interfaces";
+import Piece from "../Piece";
+import Square from "../Square";
+import { IChessBoardProps } from "../../interfaces";
 
 function ChessBoard(props: IChessBoardProps) {
   const {
@@ -62,7 +62,7 @@ function ChessBoard(props: IChessBoardProps) {
         })}
         {stones.map((stone: any, index: number) => {
           return (
-            <Cylinder
+            <Piece
               idx={index}
               key={index}
               position={stone.position}

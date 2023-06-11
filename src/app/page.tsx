@@ -10,9 +10,10 @@ import {
   initialSelected,
   initialWhiteAttributes,
 } from "./initialValues";
-import Chessboard from "./chessboard";
+import Chessboard from "./component/Chessboard";
 import Loading from "./loading";
-import Scoreboard from "./scoreboard";
+import Scoreboard from "./component/Scoreboard";
+import ChangePiece from "./component/ChangePiece";
 function Home() {
   const controlsRef = useRef<any>();
   const cameraRef = useRef<any>();

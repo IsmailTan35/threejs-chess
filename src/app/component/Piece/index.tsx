@@ -1,11 +1,12 @@
 import { memo, useEffect, useRef, useState } from "react";
-import pieces from "../move/pieces";
-import { scales, rotation, positionZ } from "../params";
-import { PieceProps } from "../interfaces";
+import pieces from "../../move/pieces";
+import { scales, rotation, positionZ } from "../../params";
+import { PieceProps } from "../../interfaces";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useLoader } from "@react-three/fiber";
+import { initialSelected } from "@/app/initialValues";
 
-function Cylinder(props: PieceProps) {
+function Piece(props: PieceProps) {
   const {
     setSquares,
     setSelected,
@@ -29,7 +30,7 @@ function Cylinder(props: PieceProps) {
     "models/chess_set.glb",
     "models/rook.glb",
   ]);
-
+  const [showModal, setShowModal] = useState(true);
   const models = {
     white: {
       pawn: {
@@ -105,53 +106,55 @@ function Cylinder(props: PieceProps) {
 
   useEffect(() => {
     setLocation([position[0], position[1], positionZ[`${type}`]]);
-  }, [position]);
+    if (type === "pawn") {
+      return;
+    }
+  }, [position, type]);
 
-  function handleClick() {
+  const clearSelected = () => {
+    setSelected(initialSelected);
+  };
+
+  async function handleClick() {
     if (color !== step || !isEnabled) return;
     if (selected.id === idx) {
-      setSelected({
-        id: null,
-        color: "",
-        type: "",
-        coordinate: [null, null, 1],
-      });
+      clearSelected();
       return;
     }
     if (step === color) {
-      setSelected({
-        id: null,
-        color: "",
-        type: "",
-        coordinate: [null, null, 1],
-      });
-      setTimeout(() => {
-        setSelected({
+      clearSelected();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const data = {
+        id: idx,
+        color: color,
+        type: type,
+        coordinate: location,
+      };
+      setSelected(data);
+
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const pieceProps = {
+        step,
+        color,
+        setSquares,
+        stones,
+        location,
+        setAttributes,
+        attributes,
+        selected: {
           id: idx,
           color: color,
           type: type,
           coordinate: location,
-        });
-        setTimeout(() => {
-          pieces[type]({
-            step,
-            color,
-            setSquares,
-            stones,
-            location,
-            setAttributes,
-            attributes,
-            selected: {
-              id: idx,
-              color: color,
-              type: type,
-              coordinate: location,
-            },
-          });
-        }, 100);
-      }, 100);
+        },
+      };
+      pieces[type](pieceProps);
     }
   }
+
+  useEffect(() => {
+    if (!showModal) return;
+  }, [showModal]);
 
   return (
     <>
@@ -186,4 +189,4 @@ function Cylinder(props: PieceProps) {
   );
 }
 
-export default memo(Cylinder);
+export default memo(Piece);

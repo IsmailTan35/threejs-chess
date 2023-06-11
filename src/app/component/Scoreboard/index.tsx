@@ -1,12 +1,12 @@
 import React from "react";
-import { IAttributes } from "../interfaces";
+import { IAttributes } from "../../interfaces";
 import {
   initialBlackAttributes,
   initialSelected,
   initialWhiteAttributes,
-} from "../initialValues";
-import stonesData from "../stones.json";
-import "../scoreboard.css";
+} from "../../initialValues";
+import stonesData from "../../stones.json";
+import "../../assets/css/scoreboard.css";
 
 interface IProps {
   step: "white" | "black";

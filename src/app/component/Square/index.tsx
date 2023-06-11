@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
-import { squareColors } from "../params";
+import { squareColors } from "../../params";
+import { useThree } from "@react-three/fiber";
+import { Edges } from "@react-three/drei";
+import { initialSelected } from "@/app/initialValues";
 
 interface ISquare {
   idx: number;
@@ -38,6 +41,7 @@ function Square(props: ISquare) {
   const y = parseInt((idx / 8).toString()[0]);
 
   useEffect(() => {
+    if (!meshRef.current) return;
     if (!isSelected) {
       meshRef.current.color.setHex(
         squareColors[(x + y) % 2 === 0 ? "black" : "white"]
@@ -49,6 +53,7 @@ function Square(props: ISquare) {
   }, [isSelected, meshRef, x, y]);
 
   useEffect(() => {
+    if (!meshRef.current) return;
     if (isTarget === "empty" && !isSelected) {
       meshRef.current.color.setHex(
         squareColors[(x + y) % 2 === 0 ? "black" : "white"]
@@ -97,11 +102,10 @@ function Square(props: ISquare) {
     });
 
     setStep((prv: any) => (prv === "white" ? "black" : "white"));
+    initialSelected;
     setTimeout(() => {
       setSelected((prv: any) => ({
-        id: null,
-        color: "",
-        type: "",
+        ...initialSelected,
         coordinate: [null, null, prv.coordinate[2]],
       }));
     }, 100);
@@ -112,7 +116,6 @@ function Square(props: ISquare) {
       }));
     }
   };
-
   return (
     <mesh
       scale={[1, 1, 0.01]}
@@ -132,7 +135,8 @@ function Square(props: ISquare) {
       }}
       onClick={handleClick}
     >
-      <boxGeometry args={[1, 1, 1]} />
+      <Edges color="black" />
+      <boxGeometry args={[1, 1, 2]} />
       <meshStandardMaterial ref={meshRef} />
     </mesh>
   );
