@@ -70,6 +70,7 @@ function ChessBoard(props: IChessBoardProps) {
               type={stone.type}
               model={stone.model}
               {...{
+                squares,
                 setSquares,
                 setSelected,
                 selected,

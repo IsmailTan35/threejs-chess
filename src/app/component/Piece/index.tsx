@@ -5,6 +5,7 @@ import { PieceProps } from "../../interfaces";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useLoader } from "@react-three/fiber";
 import { initialSelected } from "@/app/initialValues";
+import kingCheck from "@/app/move/kingCheck";
 
 function Piece(props: PieceProps) {
   const {
@@ -22,6 +23,7 @@ function Piece(props: PieceProps) {
     model,
     setAttributes,
     attributes,
+    squares,
   } = props;
 
   const meshRef = useRef<any>();
@@ -153,8 +155,10 @@ function Piece(props: PieceProps) {
   }
 
   useEffect(() => {
-    if (!showModal) return;
-  }, [showModal]);
+    if (step === color && type === "king") {
+      kingCheck({ step, color, setSquares, stones, location, squares });
+    }
+  }, [step, location, squares, type, stones]);
 
   return (
     <>

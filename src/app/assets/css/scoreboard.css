@@ -1,5 +1,6 @@
 .camera-reset,
-.move-reset {
+.move-reset,
+.close-button {
   background: white;
   color: black;
   padding: 10px;

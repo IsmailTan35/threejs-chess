@@ -13,6 +13,7 @@ export interface PieceProps {
   isEnabled: boolean;
   setAttributes: any;
   attributes: any;
+  squares: any;
 }
 
 export interface ISquareProps {

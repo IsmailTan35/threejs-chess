@@ -3,6 +3,7 @@ export interface IPiece {
   location?: any;
   setSquares?: any;
   stones?: any;
+  squares?: any;
   attributes?: any;
   setAttributes?: any;
   step?: "white" | "black";
